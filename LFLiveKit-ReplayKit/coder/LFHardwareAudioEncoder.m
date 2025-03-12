@@ -58,11 +58,11 @@
     _aacDeleage = delegate;
 }
 
-- (void)encodeAudioData:(CMSampleBufferRef*)audioBuff timeStamp:(uint64_t)timeStamp {
-    if (![self createAudioConvert:audioBuff]) {
+- (void)encodeAudioData:(CMSampleBufferRef)sampleBuffer timeStamp:(uint64_t)timeStamp {
+    if (![self createAudioConvert:sampleBuffer]) {
         return;
     }
-    [self encodeBuffer:audioBuff timeStamp:timeStamp];
+    [self encodeBuffer:sampleBuffer timeStamp:timeStamp];
 }
 
 - (void)encodeBuffer:(CMSampleBufferRef)buf timeStamp:(uint64_t)timeStamp{
