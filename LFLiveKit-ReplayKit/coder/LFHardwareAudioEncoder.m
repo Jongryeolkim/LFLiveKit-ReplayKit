@@ -5,10 +5,6 @@
 //  Created by LaiFeng on 16/5/20.
 //  Copyright © 2016年 LaiFeng All rights reserved.
 //
-#define DebugInfoKey    @"DebugInfoKey"     //一般调试信息
-#define AppGroupName  @"group.group.com.lancoo.LGTeachingAssistantTest"
-#define DarwinNotifyCenter   CFNotificationCenterGetDarwinNotifyCenter()
-#define DegugInfoNotifyName    CFSTR("DegugInfoNotifyName")
 #import "LFHardwareAudioEncoder.h"
 
 @interface LFHardwareAudioEncoder (){
@@ -72,7 +68,6 @@
     status = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(buf, NULL, &inBufferList, sizeof(inBufferList), NULL, NULL, 0, &blockBuffer);
     if (status != noErr)
     {
-        [self logExtensionDebugInfo:[NSString stringWithFormat:@"输入音频缓冲列表创建失败:%d",status]];
         return;
     }
     // 初始化一个输出缓冲列表
@@ -84,7 +79,6 @@
     UInt32 outputDataPacketSize = 1;
     status = AudioConverterFillComplexBuffer(m_converter, inputDataProc, &inBufferList, &outputDataPacketSize, &outBufferList, NULL);
     if (status != noErr) {
-        [self logExtensionDebugInfo:[NSString stringWithFormat:@"音频编码失败:%d",status]];
         return;
     }
     
@@ -101,19 +95,6 @@
         [self.aacDeleage audioEncoder:self audioFrame:audioFrame];
     }
     CFRelease(blockBuffer);
-}
-- (void)logExtensionDebugInfo:(NSString *)info {
-#ifdef DEBUG
-    if (!info.length) {
-        return;
-    }
-    
-    NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:AppGroupName];
-    [defaults setValue:info forKey:DebugInfoKey];
-    [defaults synchronize];
-
-    CFNotificationCenterPostNotification(DarwinNotifyCenter, DegugInfoNotifyName, NULL, NULL, kCFNotificationDeliverImmediately);
-#endif
 }
 - (void)stopEncoder {
     
