@@ -191,7 +191,7 @@ inline static NSString *formatedSpeed(float bytes, float elapsed_milli) {
                     case RPSampleBufferTypeVideo:
                         [self.session pushVideoBuffer:sampleBuffer];
                         break;
-                    case RPSampleBufferTypeAudioMic:
+                    case RPSampleBufferTypeAudioApp:
                         [self.session pushAudioBuffer:sampleBuffer];
                         break;
                         
