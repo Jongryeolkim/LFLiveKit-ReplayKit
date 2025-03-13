@@ -129,7 +129,6 @@
     default:
         break;
     }
-    configuration.sessionPreset = [configuration supportSessionPreset:configuration.sessionPreset];
     configuration.videoMaxKeyframeInterval = configuration.videoFrameRate*2;
     configuration.outputImageOrientation = outputImageOrientation;
     CGSize size = configuration.videoSize;
@@ -199,36 +198,6 @@
 
 - (void)setSessionPreset:(LFLiveVideoSessionPreset)sessionPreset{
     _sessionPreset = sessionPreset;
-    _sessionPreset = [self supportSessionPreset:sessionPreset];
-}
-
-#pragma mark -- Custom Method
-- (LFLiveVideoSessionPreset)supportSessionPreset:(LFLiveVideoSessionPreset)sessionPreset {
-    AVCaptureSession *session = [[AVCaptureSession alloc] init];
-    AVCaptureDevice *inputCamera;
-    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
-    for (AVCaptureDevice *device in devices){
-        if ([device position] == AVCaptureDevicePositionFront){
-            inputCamera = device;
-        }
-    }
-    AVCaptureDeviceInput *videoInput = [[AVCaptureDeviceInput alloc] initWithDevice:inputCamera error:nil];
-    
-    if ([session canAddInput:videoInput]){
-        [session addInput:videoInput];
-    }
-    
-    if (![session canSetSessionPreset:self.avSessionPreset]) {
-        if (sessionPreset == LFCaptureSessionPreset720x1280) {
-            sessionPreset = LFCaptureSessionPreset540x960;
-            if (![session canSetSessionPreset:self.avSessionPreset]) {
-                sessionPreset = LFCaptureSessionPreset360x640;
-            }
-        } else if (sessionPreset == LFCaptureSessionPreset540x960) {
-            sessionPreset = LFCaptureSessionPreset360x640;
-        }
-    }
-    return sessionPreset;
 }
 
 - (CGSize)captureOutVideoSize{
